@@ -1,3 +1,33 @@
-<p>generator works!</p>
-<p>table: {{ tableValues }}</p>
-<p>activeCode: {{ activeCode }}</p>
+<div class="top-bar">
+  <label for="character">Character <i>(letters only)</i></label>
+  <input
+    class="char-input"
+    type="text"
+    [(ngModel)]="currentCharacter"
+    onkeypress="return (event.charCode > 64 && 
+ event.charCode < 91) || (event.charCode > 96 && event.charCode < 123)"
+    (keyup)="onKey($event)"
+  />
+  <button (click)="clickEvent()">Apply</button><br />
+  <label class="blue">{{ clickMsg }}</label>
+</div>
+<br />
+<mat-grid-list
+  cols="10"
+  rowHeight="32px"
+  class="ag-theme-balham"
+  style="width: 460px"
+>
+  <div *ngFor="let line of tableValues; let i = index">
+    <mat-grid-tile
+      *ngFor="let item of tableValues[i]"
+      [colspan]="1"
+      [rowspan]="1"
+    >
+      {{ item }}
+    </mat-grid-tile>
+  </div>
+</mat-grid-list>
+<div class="code">
+  <h3>Your Code: {{ activeCode }}</h3>
+</div>

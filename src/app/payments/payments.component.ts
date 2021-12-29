@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SharedServices } from 'src/app/shared_services/shared.services';
 
 @Component({
   selector: 'app-payments',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./payments.component.css']
 })
 export class PaymentsComponent implements OnInit {
-
-  constructor() { }
+  
+  activeCode: string = '';
+  constructor(private sharedService: SharedServices) { }
 
   ngOnInit(): void {
+    this.sharedService.currentCode.subscribe(
+      (code) => (this.activeCode = code)
+    );
   }
 
 }

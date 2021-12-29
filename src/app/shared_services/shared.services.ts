@@ -13,20 +13,18 @@ export class SharedServices {
 
   tableValues: string[][] = [];
 
-  constructor() {
-  }
+  constructor() {}
 
   public readTable(): string[][] {
     this.buildTableValues();
     this.generatingCode();
-    return this.tableValues;    
+    return this.tableValues;
   }
 
   public changeCharacter(character: string): void {
     this.preferredCharacter.next(character);
+    this.readTable();
   }
-
-
 
   private generatingCode() {
     const currentSeconds = new Date().getSeconds().toString();
@@ -34,22 +32,26 @@ export class SharedServices {
     const secLast = +currentSeconds.substring(1);
 
     // count ocurrences
-    let firstOcurrence = this.countOcurrences(this.tableValues[secFirst][secLast]);
-    let secondOcurrence = this.countOcurrences(this.tableValues[secLast][secFirst]);    
-    
+    let firstOcurrence = this.countOcurrences(
+      this.tableValues[secFirst][secLast]
+    );
+    let secondOcurrence = this.countOcurrences(
+      this.tableValues[secLast][secFirst]
+    );
+
     // smallest integer division greater than 0
     firstOcurrence = this.smallestIntegerDivision(firstOcurrence);
     secondOcurrence = this.smallestIntegerDivision(secondOcurrence);
 
-    this.generatedCode.next(firstOcurrence.toString()+secondOcurrence.toString());
+    this.generatedCode.next(
+      firstOcurrence.toString() + secondOcurrence.toString()
+    );
   }
 
   countOcurrences(value: string) {
     let ocurrences = 0;
     for (let i: number = 0; i < 10; i++) {
-      ocurrences += this.tableValues[i].filter(
-        (x) => x === value
-      ).length;
+      ocurrences += this.tableValues[i].filter((x) => x === value).length;
     }
     return ocurrences;
   }
@@ -64,9 +66,34 @@ export class SharedServices {
   }
 
   buildTableValues() {
+    this.tableValues = [];
     for (let i: number = 0; i < 10; i++) {
       this.tableValues.push(this.getLineValues());
     }
+    if (this.preferredCharacter.value) {  // insert 20 char if preferredCharacter exists     
+      let insertedValues: number[][] = [];
+      while (insertedValues.length < 20) {
+        const position = this.randomNumbers();
+        if (
+          !insertedValues.find(
+            (pos) => JSON.stringify(pos) === JSON.stringify(position)
+          )
+        ) {
+          insertedValues.push(position);
+          this.tableValues[position[0]][position[1]] =
+            this.preferredCharacter.value;
+        }
+      }
+    }
+  }
+
+  randomNumbers() {
+    const min = 0;
+    const max = 9;
+    return [
+      Math.floor(Math.random() * (max - min) + min),
+      Math.floor(Math.random() * (max - min) + min),
+    ];
   }
 
   getLineValues() {
@@ -74,7 +101,7 @@ export class SharedServices {
   }
 
   getRandomChar() {
-      const randomChars = 'abcdefghijklmnopqrstuvwxyz';
-      return randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    const randomChars = 'abcdefghijklmnopqrstuvwxyz';
+    return randomChars.charAt(Math.floor(Math.random() * randomChars.length));
   }
 }
