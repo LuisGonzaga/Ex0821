@@ -8,6 +8,7 @@ import { SharedServices } from 'src/app/shared_services/shared.services';
 })
 export class GeneratorComponent implements OnInit {
   tableValues: string[][] = [];
+  activeCode: string = '';
   currentCharacter = '';
 
   constructor(private sharedService: SharedServices) {}
@@ -17,5 +18,8 @@ export class GeneratorComponent implements OnInit {
       (char) => (this.currentCharacter = char)
     );
     this.tableValues = this.sharedService.readTable();
+    this.sharedService.currentCode.subscribe(
+      (code) => (this.activeCode = code)
+    );
   }
 }

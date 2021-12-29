@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import * as randomString from 'randomstring'; // npmjs package randomstring - Library to help you create random strings
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +18,7 @@ export class SharedServices {
 
   public readTable(): string[][] {
     this.buildTableValues();
+    this.generatingCode();
     return this.tableValues;    
   }
 
@@ -74,10 +74,7 @@ export class SharedServices {
   }
 
   getRandomChar() {
-    return randomString.generate({
-      length: 1,
-      charset: 'alphabetic',
-      capitalization: 'lowercase',
-    });
+      const randomChars = 'abcdefghijklmnopqrstuvwxyz';
+      return randomChars.charAt(Math.floor(Math.random() * randomChars.length));
   }
 }

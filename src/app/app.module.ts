@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {MatIconModule} from '@angular/material/icon'
 import { AppComponent } from './app.component';
-import { GeneratorComponent } from './generator/generator/generator.component';
-import { PaymentsComponent } from './payments/payments/payments.component';
+import { GeneratorComponent } from './generator/generator.component';
+import { PaymentsComponent } from './payments/payments.component';
+import { AppRoutingModule } from './app-routing.module';
+
 
 @NgModule({
   declarations: [
@@ -13,7 +15,8 @@ import { PaymentsComponent } from './payments/payments/payments.component';
   ],
   imports: [
     BrowserModule,
-    MatIconModule
+    MatIconModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
