@@ -1,0 +1,19 @@
+th {
+  width: 100px;
+}
+
+td {
+  text-align: center;
+}
+
+button {
+  margin: 6px;
+}
+
+label {
+  margin: 6px;
+}
+
+.right {
+  float: right;
+}
