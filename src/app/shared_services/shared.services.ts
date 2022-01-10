@@ -1,32 +1,33 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedServices {
-  generatedCode = new BehaviorSubject('');
-  currentCode = this.generatedCode.asObservable();
-
-  preferredCharacter = new BehaviorSubject('');
-  currentCharacter = this.preferredCharacter.asObservable();
+  generating: boolean = false;
+  generatedCode = '';
+  preferredCharacter = '';
 
   tableValues: string[][] = [];
+
+  myDate: any;
 
   constructor() {}
 
   public readTable(): string[][] {
-    this.buildTableValues();
-    this.generatingCode();
+    this.fillTableValues();
+    this.generatedCode = this.generatingCode();
     return this.tableValues;
   }
 
-  public changeCharacter(character: string): void {
-    this.preferredCharacter.next(character);
-    this.readTable();
+  public changeCharacter(character: string): string[][] {
+    this.preferredCharacter = character;
+    this.fillTableValues();
+    this.generatedCode = this.generatingCode();
+    return this.tableValues;
   }
 
-  private generatingCode() {
+  public generatingCode() {
     const currentSeconds = new Date().getSeconds().toString();
     const secFirst = +currentSeconds.substring(0, 1);
     const secLast = +currentSeconds.substring(1);
@@ -43,9 +44,7 @@ export class SharedServices {
     firstOcurrence = this.smallestIntegerDivision(firstOcurrence);
     secondOcurrence = this.smallestIntegerDivision(secondOcurrence);
 
-    this.generatedCode.next(
-      firstOcurrence.toString() + secondOcurrence.toString()
-    );
+    return firstOcurrence.toString() + secondOcurrence.toString();
   }
 
   countOcurrences(value: string) {
@@ -65,26 +64,34 @@ export class SharedServices {
     return value;
   }
 
-  buildTableValues() {
+  fillTableValues() {
     this.tableValues = [];
+    let insertedValues = 0;
+    let insertedChars = 0;
     for (let i: number = 0; i < 10; i++) {
       this.tableValues.push(this.getLineValues());
     }
-    if (this.preferredCharacter.value) {  // insert 20 char if preferredCharacter exists     
-      let insertedValues: number[][] = [];
-      while (insertedValues.length < 20) {
+
+    if (this.preferredCharacter) {
+      insertedValues = this.countOcurrences(this.preferredCharacter);
+      while (insertedValues + insertedChars < 20) {
         const position = this.randomNumbers();
         if (
-          !insertedValues.find(
-            (pos) => JSON.stringify(pos) === JSON.stringify(position)
+          !this.tableValues.find(
+            () =>
+              this.tableValues[position[0]][position[1]] ===
+              this.preferredCharacter
           )
         ) {
-          insertedValues.push(position);
-          this.tableValues[position[0]][position[1]] =
-            this.preferredCharacter.value;
+          insertedChars++;
+          this.tableValues[position[0]][position[1]] = this.preferredCharacter;
         }
       }
     }
+  }
+
+  validateChar(element: string, index: any, array: any) {
+    return element === this.preferredCharacter;
   }
 
   randomNumbers() {
@@ -103,5 +110,19 @@ export class SharedServices {
   getRandomChar() {
     const randomChars = 'abcdefghijklmnopqrstuvwxyz';
     return randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+  }
+
+  // Local Storage
+  getItem(key: string) {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : null;
+  }
+
+  setItem(key: string, value: any): void {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  clear() {
+    localStorage.clear();
   }
 }

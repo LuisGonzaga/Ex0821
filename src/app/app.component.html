@@ -1,12 +1,16 @@
 <div class="content" role="main">
-  <div class="card-container">
-    <a class="card" routerLink="/generator" routerLinkActive="active">
-      <span>Generator</span>
-    </a>
-    <a class="card" routerLink="/payments" routerLinkActive="active">
-      <span>Payments</span>
-    </a>
+  <div class="code">
+    <h3>
+      Your Code: {{ activeCode }}
+      <h4>Seconds Counter: {{ timeCount }}</h4>
+    </h3>
+    <button (click)="activeSwitch()">
+      {{ activePanel ? " Generator " : " Payments " }}
+    </button>
   </div>
-  
-  <router-outlet></router-outlet>
+  <div class="card-container">
+    <br />
+    <app-generator *ngIf="!activePanel" [timer]="timeCount"></app-generator>
+    <app-payments *ngIf="activePanel" [activeCode]="activeCode"></app-payments>
+  </div>
 </div>

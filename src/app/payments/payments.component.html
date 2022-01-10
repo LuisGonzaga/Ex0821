@@ -1,1 +1,35 @@
-<p>active code: {{activeCode}}</p>
+<div class="input-ctrl">
+  <label>Payment</label>
+  <input type="text" #payment />
+  <label>Value</label>
+  <input type="text" #valuePayed />
+  <button
+    (click)="clickEvent(payment.value, valuePayed.value)"
+    [disabled]="valuePayed.value == '' || payment.value == ''"
+  >
+    Apply</button
+  ><br />
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Payment</th>
+      <th>Value</th>
+      <th>Code</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of storedPayments">
+      <td>{{ item.payment }}</td>
+      <td>{{ item.value }}</td>
+      <td>{{ item.activeCode }}</td>
+      <td>{{ item.date | date }}</td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<button class="right" type="button" (click)="deleteClick()">
+  Delete Records
+</button>
